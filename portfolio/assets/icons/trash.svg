@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="trashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#64748b"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="#0f172a" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+  <path d="M22 22 L24 17 C24.5 16 25.5 15 27 15 L37 15 C38.5 15 39.5 16 40 17 L42 22" stroke="url(#trashGrad)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M16 22 L48 22" stroke="url(#trashGrad)" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M20 22 L23 47 C23.2 48.5 24.5 50 26 50 L38 50 C39.5 50 40.8 48.5 41 47 L44 22" fill="#1e293b" stroke="url(#trashGrad)" stroke-width="2.5"/>
+  <line x1="28" y1="28" x2="28" y2="44" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+  <line x1="36" y1="28" x2="36" y2="44" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="startGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ff88"/>
+      <stop offset="50%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <filter id="neonBlur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Futuristic Hexagon base -->
+  <polygon points="32,6 54,18 54,46 32,58 10,46 10,18" fill="#0b1329" stroke="url(#startGlow)" stroke-width="3" filter="url(#neonBlur)"/>
+  <!-- Stylized "A" and tactical pitch line -->
+  <path d="M32 16 L20 44 L27 44 L32 32 L37 44 L44 44 Z" fill="url(#startGlow)"/>
+  <circle cx="32" cy="27" r="2.5" fill="#ffffff"/>
+  <!-- Center dot resembling football core -->
+  <circle cx="32" cy="46" r="3" fill="#00ff88"/>
+</svg>

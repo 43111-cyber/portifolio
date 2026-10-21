@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AdrielOS — Portfólio Interativo | Adriel Morback</title>
+  <meta name="description" content="Portfólio pessoal interativo de Adriel Morback, estudante de Ensino Médio Técnico, desenvolvedor e entusiasta de futebol. Sistema operacional simulado no navegador.">
+  <meta name="author" content="Adriel Morback">
+  
+  <!-- Fontes Google Modernas: Outfit (Interface) e JetBrains Mono (Código & Sistema) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/start.svg">
+</head>
+<body data-theme="dark">
+
+  <!-- ================================================================= -->
+  <!-- 1. TELA DE INICIALIZAÇÃO (BOOTLOADER)                              -->
+  <!-- ================================================================= -->
+  <div id="boot-screen" class="boot-screen" role="dialog" aria-label="Inicialização do AdrielOS">
+    <div class="boot-content">
+      <div class="boot-logo-wrapper">
+        <img src="assets/icons/start.svg" alt="AdrielOS Logo" class="boot-logo-img">
+        <h1 class="boot-title">Adriel<span>OS</span></h1>
+      </div>
+      
+      <p class="boot-tagline">"Entre códigos, ideias e futebol, estou sempre criando algo novo."</p>
+
+      <div class="boot-progress-container">
+        <div class="boot-progress-bar" id="boot-progress-bar"></div>
+      </div>
+
+      <div class="boot-status-row">
+        <span class="boot-status-text" id="boot-status-text">Iniciando ambiente...</span>
+        <span class="boot-percent" id="boot-percent">0%</span>
+      </div>
+
+      <div class="boot-console" id="boot-console" aria-live="polite">
+        <div class="boot-log-line">&gt; Carregando AdrielOS Kernel v1.0.4...</div>
+      </div>
+
+      <button id="btn-skip-boot" class="btn-skip-boot" aria-label="Pular inicialização">
+        Pular Inicialização <kbd>ESC</kbd>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- 2. ÁREA DE TRABALHO (DESKTOP ENVIRONMENT)                         -->
+  <!-- ================================================================= -->
+  <main id="desktop" class="desktop" role="region" aria-label="Área de Trabalho">
+    
+    <!-- Camada de Papel de Parede -->
+    <div id="wallpaper-layer" class="wallpaper-layer"></div>
+    <div class="desktop-overlay-grid"></div>
+
+    <!-- Grade de Ícones da Área de Trabalho -->
+    <section class="desktop-icons" id="desktop-icons" aria-label="Aplicativos da Área de Trabalho">
+      
+      <button class="desktop-icon" data-app="about" id="icon-about" tabindex="0">
+        <div class="icon-visual">
+          <img src="assets/icons/about.svg" alt="Ícone Sobre Adriel" loading="lazy">
+        </div>
+        <span class="icon-label">Sobre Adriel</span>
+      </button>
+
+      <button class="desktop-icon" data-app="projects" id="icon-projects" tabindex="0">
+        <div class="icon-visual">
+          <img src="assets/icons/projects.svg" alt="Ícone Meus Projetos" loading="lazy">
+        </div>
+        <span class="icon-label">Meus Projetos</span>
+      </button>
+
+      <button class="desktop-icon" data-app="skills" id="icon-skills" tabindex="0">
+        <div class="icon-visual">
+          <img src="assets/icons/skills.svg" alt="Ícone Habilidades" loading="lazy">
+        </div>
+        <span class="icon-label">Habilidades</span>
+      </button>
+
+      <button class="desktop-icon" data-app="github" id="icon-github" tabindex="0">
+        <div class="icon-visual">
+          <img src="assets/icons/github.svg" alt="Ícone GitHub" loading="lazy">
+        </div>
+        <span class="icon-label">Meu GitHub</span>
+      </button>
+
+      <button class="desktop-icon" data-app="contact" id="icon-contact" tabindex="0">
+        <div class="icon-visual">
+          <img src="assets/icons/contact.svg" alt="Ícone Contato" loading="lazy">
+        </div>
+        <span class="icon-label">Contato</span>
+      </button>
+
+      <button class="desktop-icon" data-app="trash" id="icon-trash" tabindex="0">
+        <div class="icon-visual">
+          <img src="assets/icons/trash.svg" alt="Ícone Lixeira" loading="lazy">
+        </div>
+        <span class="icon-label">Lixeira</span>
+      </button>
+
+      <button class="desktop-icon" data-app="wallpaper" id="icon-wallpaper" tabindex="0">
+        <div class="icon-visual">
+          <img src="assets/icons/settings.svg" alt="Ícone Papel de Parede" loading="lazy">
+        </div>
+        <span class="icon-label">Wallpapers</span>
+      </button>
+
+    </section>
+
+    <!-- =============================================================== -->
+    <!-- 3. CONTAINER DE JANELAS DO SISTEMA                              -->
+    <!-- =============================================================== -->
+    <div id="windows-container" class="windows-container">
+
+      <!-- ------------------------------------------------------------- -->
+      <!-- JANELA: SOBRE ADRIEL                                          -->
+      <!-- ------------------------------------------------------------- -->
+      <article class="os-window" id="win-about" data-app="about" role="dialog" aria-labelledby="win-about-title" style="display: none;">
+        <header class="window-titlebar">
+          <div class="window-title-left">
+            <img src="assets/icons/about.svg" class="window-title-icon" alt="">
+            <span class="window-title-text" id="win-about-title">Sobre Adriel</span>
+          </div>
+          <div class="window-controls">
+            <button class="win-btn win-btn-minimize" aria-label="Minimizar" title="Minimizar">
+              <svg viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" stroke-width="1.8"/></svg>
+            </button>
+            <button class="win-btn win-btn-maximize" aria-label="Maximizar" title="Maximizar">
+              <svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            </button>
+            <button class="win-btn win-btn-close" aria-label="Fechar" title="Fechar">
+              <svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="2" x2="2" y2="8" stroke="currentColor" stroke-width="1.8"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="window-body">
+          <div class="about-hero">
+            <div class="about-avatar-container">
+              <div class="about-avatar-ring">
+                <!-- Espaço reservado para foto pessoal / Avatar estilizado -->
+                <div class="avatar-placeholder" aria-label="Espaço reservado para foto pessoal de Adriel Morback">
+                  <span class="avatar-initials">AM</span>
+                  <div class="avatar-badge">⚡</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="about-hero-info">
+              <div class="user-chip">Estudante de Ensino Médio Técnico</div>
+              <h2 class="about-name">Adriel Morback</h2>
+              <p class="about-tagline-quote">"Entre códigos, ideias e futebol, estou sempre criando algo novo."</p>
+              
+              <div class="about-stats-pill">
+                <span>📍 São Paulo, Brasil</span>
+                <span class="pill-divider">•</span>
+                <span>🟢 Disponível para aprender</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-bio-box">
+            <p class="about-bio-text">
+              "Olá! Meu nome é <strong>Adriel Morback</strong>. Sou estudante de Ensino Médio Técnico, gosto de criar sites, desenvolver projetos e aprender novas tecnologias. Também gosto muito de futebol. Este espaço reúne um pouco do que estou aprendendo e construindo."
+            </p>
+          </div>
+
+          <h3 class="section-heading">Áreas de Foco &amp; Interesses</h3>
+          <div class="about-cards-grid">
+            
+            <div class="about-card">
+              <div class="card-icon-wrap" style="--accent-card: #00ff88;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="8" y1="7" x2="8.01" y2="7"/></svg>
+              </div>
+              <div class="card-info">
+                <h4>Desenvolvimento de Sites</h4>
+                <p>Criação de páginas dinâmicas, interfaces responsivas, estruturação semântica e estilização moderna para a web.</p>
+              </div>
+            </div>
+
+            <div class="about-card">
+              <div class="card-icon-wrap" style="--accent-card: #38bdf8;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              </div>
+              <div class="card-info">
+                <h4>Programação</h4>
+                <p>Lógica de algoritmos, manipulação de dados, scripts interativos e resolução prática de desafios computacionais.</p>
+              </div>
+            </div>
+
+            <div class="about-card">
+              <div class="card-icon-wrap" style="--accent-card: #f59e0b;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div class="card-info">
+                <h4>Projetos Digitais</h4>
+                <p>Construção de aplicações úteis, materiais educacionais acessíveis e ferramentas que geram impacto real.</p>
+              </div>
+            </div>
+
+            <div class="about-card">
+              <div class="card-icon-wrap" style="--accent-card: #22c55e;">
+                <img src="assets/icons/soccer.svg" class="card-custom-svg" alt="">
+              </div>
+              <div class="card-info">
+                <h4>Futebol</h4>
+                <p>Paixão esportiva, trabalho em equipe, visão tática e inspiração para jogos de futebol arcade interativos.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="about-actions-footer">
+            <button class="btn btn-primary" onclick="openApp('projects')">
+              Explorar Meus Projetos
+            </button>
+            <button class="btn btn-secondary" onclick="openApp('contact')">
+              Entrar em Contato
+            </button>
+          </div>
+        </div>
+      </article>
+
+      <!-- ------------------------------------------------------------- -->
+      <!-- JANELA: MEUS PROJETOS                                         -->
+      <!-- ------------------------------------------------------------- -->
+      <article class="os-window" id="win-projects" data-app="projects" role="dialog" aria-labelledby="win-projects-title" style="display: none;">
+        <header class="window-titlebar">
+          <div class="window-title-left">
+            <img src="assets/icons/projects.svg" class="window-title-icon" alt="">
+            <span class="window-title-text" id="win-projects-title">Meus Projetos — Galeria</span>
+          </div>
+          <div class="window-controls">
+            <button class="win-btn win-btn-minimize" aria-label="Minimizar" title="Minimizar"><svg viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" stroke-width="1.8"/></svg></button>
+            <button class="win-btn win-btn-maximize" aria-label="Maximizar" title="Maximizar"><svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+            <button class="win-btn win-btn-close" aria-label="Fechar" title="Fechar"><svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="2" x2="2" y2="8" stroke="currentColor" stroke-width="1.8"/></svg></button>
+          </div>
+        </header>
+
+        <div class="window-body">
+          <div class="projects-header-desc">
+            <p>Projetos desenvolvidos por mim durante meus estudos no Ensino Médio Técnico e criações autônomas.</p>
+          </div>
+
+          <div class="projects-grid">
+            
+            <!-- PROJETO 1: Jogo STE (Beiço Street) -->
+            <div class="project-card featured-project">
+              <div class="project-thumbnail-wrapper">
+                <img src="assets/projects/beico_street.jpg" alt="Preview do Jogo STE - Beiço Street" class="project-thumbnail" loading="lazy">
+                <div class="project-badge badge-arcade">🏆 Jogo Arcade 1v1</div>
+              </div>
+              <div class="project-content">
+                <div class="project-meta-top">
+                  <span class="repo-owner-tag">43111-cyber / jogo-ste</span>
+                  <span class="status-indicator">Ativo</span>
+                </div>
+                <h3 class="project-name">BEIÇO STREET — Taça das Favelas Campinas</h3>
+                <p class="project-description">
+                  Projeto de jogo desenvolvido por mim: uma experiência arcade de futebol de rua 1v1 diretamente no navegador. Conta com escolha de times da quebrada, modo torneio com chaveamento (oitavas, quartas, semifinal e final), placar digital dinâmico, cronômetro de partida e suporte a 1 Jogador vs CPU ou 2 Jogadores locais.
+                </p>
+                <div class="project-tags">
+                  <span class="tag">JavaScript (72.4%)</span>
+                  <span class="tag">CSS3 (19.4%)</span>
+                  <span class="tag">HTML5 (8.2%)</span>
+                  <span class="tag">Canvas 2D API</span>
+                </div>
+                <div class="project-card-actions">
+                  <a href="https://github.com/43111-cyber/jogo-ste" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
+                    <img src="assets/icons/github.svg" class="btn-icon" alt="">
+                    Abrir no GitHub
+                  </a>
+                  <button class="btn btn-secondary btn-sm" onclick="openApp('github')">
+                    Ver no Explorer
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- PROJETO 2: Apostila de Excel para Idosos -->
+            <div class="project-card">
+              <div class="project-thumbnail-wrapper">
+                <img src="assets/projects/excel_idosos.jpg" alt="Ilustração da Apostila de Excel para Idosos" class="project-thumbnail" loading="lazy">
+                <div class="project-badge badge-edu">📖 Material Educacional</div>
+              </div>
+              <div class="project-content">
+                <div class="project-meta-top">
+                  <span class="repo-owner-tag">Projeto Social &amp; Inclusão</span>
+                  <span class="status-indicator">Concluído</span>
+                </div>
+                <h3 class="project-name">Apostila de Excel para Idosos</h3>
+                <p class="project-description">
+                  "Material educacional criado para ajudar pessoas idosas a aprender Excel de forma mais simples e acessível."
+                  Desenvolvido com foco em alfabetização digital, tipografia ampliada, ilustrações didáticas e explicações práticas sem jargões complexos, capacitando pessoas da terceira idade no uso de planilhas.
+                </p>
+                <div class="project-tags">
+                  <span class="tag">Microsoft Excel</span>
+                  <span class="tag">Inclusão Digital</span>
+                  <span class="tag">Design Instrucional</span>
+                  <span class="tag">Acessibilidade</span>
+                </div>
+                <div class="project-card-actions">
+                  <button class="btn btn-secondary btn-sm" onclick="showToast('Material educacional apresentado no portfólio. Entre em contato para saber mais!')">
+                    ℹ️ Detalhes do Projeto
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- PROJETO 3: Próximos Projetos -->
+            <div class="project-card future-card">
+              <div class="project-thumbnail-wrapper">
+                <img src="assets/projects/future_lab.jpg" alt="Laboratório de Próximos Projetos" class="project-thumbnail" loading="lazy">
+                <div class="project-badge badge-future">⚡ Em Desenvolvimento</div>
+              </div>
+              <div class="project-content">
+                <div class="project-meta-top">
+                  <span class="repo-owner-tag">Pipeline de Criação</span>
+                  <span class="status-indicator blink">Em Progresso</span>
+                </div>
+                <h3 class="project-name">Próximos Projetos</h3>
+                <p class="project-description">
+                  Área reservada para futuros sites, novos jogos interativos, protótipos de sistemas e aplicações completas que estão sendo planejadas e codificadas. Atualizado periodicamente conforme novos repositórios são publicados.
+                </p>
+                <div class="project-tags">
+                  <span class="tag">Web Apps</span>
+                  <span class="tag">Jogos 2D</span>
+                  <span class="tag">Sistemas Web</span>
+                  <span class="tag">Projetos Técnicos</span>
+                </div>
+                <div class="project-card-actions">
+                  <button class="btn btn-secondary btn-sm" onclick="openApp('contact')">
+                    💡 Tem uma sugestão de projeto?
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </article>
+
+      <!-- ------------------------------------------------------------- -->
+      <!-- JANELA: HABILIDADES                                           -->
+      <!-- ------------------------------------------------------------- -->
+      <article class="os-window" id="win-skills" data-app="skills" role="dialog" aria-labelledby="win-skills-title" style="display: none;">
+        <header class="window-titlebar">
+          <div class="window-title-left">
+            <img src="assets/icons/skills.svg" class="window-title-icon" alt="">
+            <span class="window-title-text" id="win-skills-title">Minhas Habilidades</span>
+          </div>
+          <div class="window-controls">
+            <button class="win-btn win-btn-minimize" aria-label="Minimizar" title="Minimizar"><svg viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" stroke-width="1.8"/></svg></button>
+            <button class="win-btn win-btn-maximize" aria-label="Maximizar" title="Maximizar"><svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+            <button class="win-btn win-btn-close" aria-label="Fechar" title="Fechar"><svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="2" x2="2" y2="8" stroke="currentColor" stroke-width="1.8"/></svg></button>
+          </div>
+        </header>
+
+        <div class="window-body">
+          <div class="skills-disclaimer">
+            <span class="skills-info-icon">💡</span>
+            <span>Habilidades e ferramentas fundamentadas no aprendizado contínuo no Ensino Médio Técnico e aplicadas na prática nos projetos reais.</span>
+          </div>
+
+          <div class="skills-sections">
+            
+            <div class="skill-group">
+              <h4 class="skill-group-title">
+                <span class="group-bullet" style="background-color: #00ff88;"></span>
+                Criação de Sites &amp; Front-End
+              </h4>
+              <div class="skill-items-grid">
+                <div class="skill-item">
+                  <div class="skill-item-header">
+                    <strong>HTML5 Semântico</strong>
+                    <span class="skill-verified">Confirmado em projetos</span>
+                  </div>
+                  <p>Estruturação correta, acessibilidade, meta tags e integração de elementos multimídia e Canvas.</p>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-item-header">
+                    <strong>CSS3 Moderno</strong>
+                    <span class="skill-verified">Confirmado em projetos</span>
+                  </div>
+                  <p>Flexbox, CSS Grid, variáveis personalizadas, efeitos de vidro (glassmorphism), animações e responsividade.</p>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-item-header">
+                    <strong>JavaScript Puro (ES6+)</strong>
+                    <span class="skill-verified">Confirmado em projetos</span>
+                  </div>
+                  <p>Manipulação de DOM, gerenciamento de eventos, lógica funcional e estruturação modular sem dependência de frameworks.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="skill-group">
+              <h4 class="skill-group-title">
+                <span class="group-bullet" style="background-color: #38bdf8;"></span>
+                Programação &amp; Lógica de Sistemas
+              </h4>
+              <div class="skill-items-grid">
+                <div class="skill-item">
+                  <div class="skill-item-header">
+                    <strong>HTML5 Canvas 2D &amp; Games</strong>
+                    <span class="skill-verified">Utilizado no Jogo STE</span>
+                  </div>
+                  <p>Renderização gráfica em tempo real, detecção de colisão, física de bola e animação por quadros de arcade.</p>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-item-header">
+                    <strong>Estruturação &amp; Lógica de Torneio</strong>
+                    <span class="skill-verified">Utilizado no Jogo STE</span>
+                  </div>
+                  <p>Sistemas de pontuação, cronômetro de partida, IA básica para modo CPU e fluxo de fases eliminatórias.</p>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-item-header">
+                    <strong>Git &amp; GitHub</strong>
+                    <span class="skill-verified">Repositório Ativo</span>
+                  </div>
+                  <p>Versionamento de código, controle de histórico e publicação de projetos open-source.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="skill-group">
+              <h4 class="skill-group-title">
+                <span class="group-bullet" style="background-color: #f59e0b;"></span>
+                Projetos Digitais &amp; Ferramentas
+              </h4>
+              <div class="skill-items-grid">
+                <div class="skill-item">
+                  <div class="skill-item-header">
+                    <strong>Microsoft Excel &amp; Planilhas</strong>
+                    <span class="skill-verified">Apostila Educacional</span>
+                  </div>
+                  <p>Fórmulas, organização de dados e formatação didática para inclusão de iniciantes e idosos.</p>
+                </div>
+
+                <div class="skill-item">
+                  <div class="skill-item-header">
+                    <strong>Tecnologia &amp; Futebol</strong>
+                    <span class="skill-verified">Tema de Destaque</span>
+                  </div>
+                  <p>Integração de conceitos táticos do esporte em experiências digitais dinâmicas e envolventes.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </article>
+
+      <!-- ------------------------------------------------------------- -->
+      <!-- JANELA: GITHUB EXPLORER                                       -->
+      <!-- ------------------------------------------------------------- -->
+      <article class="os-window" id="win-github" data-app="github" role="dialog" aria-labelledby="win-github-title" style="display: none;">
+        <header class="window-titlebar">
+          <div class="window-title-left">
+            <img src="assets/icons/github.svg" class="window-title-icon" alt="">
+            <span class="window-title-text" id="win-github-title">GitHub Explorer — 43111-cyber</span>
+          </div>
+          <div class="window-controls">
+            <button class="win-btn win-btn-minimize" aria-label="Minimizar" title="Minimizar"><svg viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" stroke-width="1.8"/></svg></button>
+            <button class="win-btn win-btn-maximize" aria-label="Maximizar" title="Maximizar"><svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+            <button class="win-btn win-btn-close" aria-label="Fechar" title="Fechar"><svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="2" x2="2" y2="8" stroke="currentColor" stroke-width="1.8"/></svg></button>
+          </div>
+        </header>
+
+        <div class="window-body">
+          <div class="github-profile-bar">
+            <div class="github-avatar-circle">
+              <img src="assets/icons/github.svg" alt="GitHub Octocat" class="github-octo">
+            </div>
+            <div class="github-profile-details">
+              <h3 class="github-username">43111-cyber</h3>
+              <p class="github-bio">Repositórios públicos e projetos de código de Adriel Morback</p>
+            </div>
+            <a href="https://github.com/43111-cyber" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+              Visitar Perfil Oficial ↗
+            </a>
+          </div>
+
+          <h4 class="section-heading">Repositório em Destaque</h4>
+          
+          <div class="github-repo-card">
+            <div class="repo-card-header">
+              <div class="repo-title-row">
+                <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.75.75 0 001.5 0v-3.25a.75.75 0 00-1.5 0z"/></svg>
+                <a href="https://github.com/43111-cyber/jogo-ste" target="_blank" rel="noopener noreferrer" class="repo-link">
+                  43111-cyber / <strong>jogo-ste</strong>
+                </a>
+                <span class="repo-visibility">Public</span>
+              </div>
+            </div>
+
+            <p class="repo-description">
+              BEIÇO STREET — Taça das Favelas Campinas. Jogo arcade de futebol de rua 1v1 construído para navegador com HTML5 Canvas e JavaScript puro.
+            </p>
+
+            <div class="repo-languages-bar" title="Composição do Repositório: JS 72.4%, CSS 19.4%, HTML 8.2%">
+              <span style="width: 72.4%; background-color: #f1e05a;"></span>
+              <span style="width: 19.4%; background-color: #563d7c;"></span>
+              <span style="width: 8.2%; background-color: #e34c26;"></span>
+            </div>
+
+            <div class="repo-lang-legend">
+              <span><span class="lang-dot" style="background-color: #f1e05a;"></span> JavaScript 72.4%</span>
+              <span><span class="lang-dot" style="background-color: #563d7c;"></span> CSS 19.4%</span>
+              <span><span class="lang-dot" style="background-color: #e34c26;"></span> HTML 8.2%</span>
+            </div>
+
+            <div class="repo-clone-box">
+              <span class="clone-label">Clone via HTTPS:</span>
+              <div class="clone-input-row">
+                <input type="text" readonly value="https://github.com/43111-cyber/jogo-ste.git" id="clone-url-input">
+                <button class="btn btn-secondary btn-sm" id="btn-copy-clone" onclick="copyCloneUrl()">Copiar</button>
+              </div>
+            </div>
+
+            <div class="repo-footer-actions">
+              <a href="https://github.com/43111-cyber/jogo-ste" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                Acessar Repositório no GitHub ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ------------------------------------------------------------- -->
+      <!-- JANELA: CONTATO                                               -->
+      <!-- ------------------------------------------------------------- -->
+      <article class="os-window" id="win-contact" data-app="contact" role="dialog" aria-labelledby="win-contact-title" style="display: none;">
+        <header class="window-titlebar">
+          <div class="window-title-left">
+            <img src="assets/icons/contact.svg" class="window-title-icon" alt="">
+            <span class="window-title-text" id="win-contact-title">Contato — Adriel Morback</span>
+          </div>
+          <div class="window-controls">
+            <button class="win-btn win-btn-minimize" aria-label="Minimizar" title="Minimizar"><svg viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" stroke-width="1.8"/></svg></button>
+            <button class="win-btn win-btn-maximize" aria-label="Maximizar" title="Maximizar"><svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+            <button class="win-btn win-btn-close" aria-label="Fechar" title="Fechar"><svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="2" x2="2" y2="8" stroke="currentColor" stroke-width="1.8"/></svg></button>
+          </div>
+        </header>
+
+        <div class="window-body">
+          <div class="contact-channels-grid">
+            
+            <a href="mailto:adriel.morback@gmail.com" class="channel-card">
+              <div class="channel-icon-wrap" style="--chan-color: #00ff88;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="channel-info">
+                <span class="channel-label">E-mail Direto</span>
+                <span class="channel-val">adriel.morback@gmail.com</span>
+              </div>
+              <span class="btn-channel-action">Enviar e-mail ↗</span>
+            </a>
+
+            <a href="https://wa.me/5519974226148" target="_blank" rel="noopener noreferrer" class="channel-card">
+              <div class="channel-icon-wrap" style="--chan-color: #25d366;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              </div>
+              <div class="channel-info">
+                <span class="channel-label">WhatsApp</span>
+                <span class="channel-val">+55 19 97422-6148</span>
+              </div>
+              <span class="btn-channel-action">Conversar no WhatsApp ↗</span>
+            </a>
+
+            <a href="https://github.com/43111-cyber" target="_blank" rel="noopener noreferrer" class="channel-card">
+              <div class="channel-icon-wrap" style="--chan-color: #38bdf8;">
+                <img src="assets/icons/github.svg" class="channel-svg-img" alt="">
+              </div>
+              <div class="channel-info">
+                <span class="channel-label">GitHub</span>
+                <span class="channel-val">github.com/43111-cyber</span>
+              </div>
+              <span class="btn-channel-action">Visitar GitHub ↗</span>
+            </a>
+
+          </div>
+
+          <div class="contact-form-section">
+            <h4 class="section-heading">Formulário de Mensagem</h4>
+            <p class="form-disclaimer">Preencha o formulário abaixo para enviar uma mensagem diretamente pelo sistema.</p>
+
+            <form id="contact-form" class="os-form" onsubmit="handleContactSubmit(event)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="contact-name">Seu Nome *</label>
+                  <input type="text" id="contact-name" name="name" placeholder="Ex: Lucas Silva" required>
+                </div>
+                <div class="form-group">
+                  <label for="contact-email">Seu E-mail *</label>
+                  <input type="email" id="contact-email" name="email" placeholder="Ex: lucas@exemplo.com" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-subject">Assunto</label>
+                <input type="text" id="contact-subject" name="subject" placeholder="Ex: Proposta de projeto ou bate-papo">
+              </div>
+
+              <div class="form-group">
+                <label for="contact-message">Sua Mensagem *</label>
+                <textarea id="contact-message" name="message" rows="4" placeholder="Escreva aqui sua mensagem..." required></textarea>
+              </div>
+
+              <div id="contact-feedback" class="form-feedback hidden" role="alert"></div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="btn-submit-contact">
+                  Enviar Mensagem
+                </button>
+                <span class="form-notice">Ambiente estático: o formulário valida os campos e gera atalho para e-mail/WhatsApp.</span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </article>
+
+      <!-- ------------------------------------------------------------- -->
+      <!-- JANELA: LIXEIRA                                               -->
+      <!-- ------------------------------------------------------------- -->
+      <article class="os-window" id="win-trash" data-app="trash" role="dialog" aria-labelledby="win-trash-title" style="display: none;">
+        <header class="window-titlebar">
+          <div class="window-title-left">
+            <img src="assets/icons/trash.svg" class="window-title-icon" alt="">
+            <span class="window-title-text" id="win-trash-title">Lixeira do AdrielOS</span>
+          </div>
+          <div class="window-controls">
+            <button class="win-btn win-btn-minimize" aria-label="Minimizar" title="Minimizar"><svg viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" stroke-width="1.8"/></svg></button>
+            <button class="win-btn win-btn-maximize" aria-label="Maximizar" title="Maximizar"><svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+            <button class="win-btn win-btn-close" aria-label="Fechar" title="Fechar"><svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="2" x2="2" y2="8" stroke="currentColor" stroke-width="1.8"/></svg></button>
+          </div>
+        </header>
+
+        <div class="window-body trash-body">
+          <div class="trash-empty-state">
+            <div class="trash-icon-huge">
+              <img src="assets/icons/trash.svg" alt="" class="trash-huge-img">
+            </div>
+            <h3 class="trash-headline">Nenhum arquivo descartado.</h3>
+            <p class="trash-quote">"Todos os projetos continuam em construção!"</p>
+            <p class="trash-sub">Aqui no AdrielOS, cada ideia, linha de código e jogada tática é guardada para inspirar novos desenvolvimentos.</p>
+            
+            <div class="trash-action-row">
+              <button class="btn btn-secondary" onclick="showToast('♻️ A lixeira já está limpa e todas as ideias continuam ativas!')">
+                Esvaziar Lixeira
+              </button>
+              <button class="btn btn-primary" onclick="openApp('projects')">
+                Ver Projetos Ativos
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ------------------------------------------------------------- -->
+      <!-- JANELA: PERSONALIZAÇÃO DE PAPÉIS DE PAREDE                    -->
+      <!-- ------------------------------------------------------------- -->
+      <article class="os-window" id="win-wallpaper" data-app="wallpaper" role="dialog" aria-labelledby="win-wallpaper-title" style="display: none;">
+        <header class="window-titlebar">
+          <div class="window-title-left">
+            <img src="assets/icons/settings.svg" class="window-title-icon" alt="">
+            <span class="window-title-text" id="win-wallpaper-title">Personalização de Papel de Parede</span>
+          </div>
+          <div class="window-controls">
+            <button class="win-btn win-btn-minimize" aria-label="Minimizar" title="Minimizar"><svg viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" stroke-width="1.8"/></svg></button>
+            <button class="win-btn win-btn-maximize" aria-label="Maximizar" title="Maximizar"><svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+            <button class="win-btn win-btn-close" aria-label="Fechar" title="Fechar"><svg viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="currentColor" stroke-width="1.8"/><line x1="8" y1="2" x2="2" y2="8" stroke="currentColor" stroke-width="1.8"/></svg></button>
+          </div>
+        </header>
+
+        <div class="window-body">
+          <p class="wallpaper-hint">Escolha um papel de parede oficial para personalizar o visual do AdrielOS:</p>
+          
+          <div class="wallpaper-selector-grid">
+            
+            <div class="wallpaper-option" data-wp="adriel_tactical_pitch.jpg" onclick="setWallpaper('adriel_tactical_pitch.jpg')">
+              <div class="wp-preview-thumb wp-thumb-1"></div>
+              <div class="wp-meta">
+                <strong>Cyber Tático de Futebol</strong>
+                <span>Estilo Principal (Tech + Futebol)</span>
+              </div>
+            </div>
+
+            <div class="wallpaper-option" data-wp="cyber_matrix_pitch.svg" onclick="setWallpaper('cyber_matrix_pitch.svg')">
+              <div class="wp-preview-thumb wp-thumb-2"></div>
+              <div class="wp-meta">
+                <strong>Matriz Vetorial de Futebol</strong>
+                <span>Linhas de Campo &amp; Código Neon</span>
+              </div>
+            </div>
+
+            <div class="wallpaper-option" data-wp="deep_space_aurora.svg" onclick="setWallpaper('deep_space_aurora.svg')">
+              <div class="wp-preview-thumb wp-thumb-3"></div>
+              <div class="wp-meta">
+                <strong>Aurora Cósmica Esmeralda</strong>
+                <span>Gradiente suave com nebulosa</span>
+              </div>
+            </div>
+
+            <div class="wallpaper-option" data-wp="minimal_slate_field.svg" onclick="setWallpaper('minimal_slate_field.svg')">
+              <div class="wp-preview-thumb wp-thumb-4"></div>
+              <div class="wp-meta">
+                <strong>Ardósia Minimalista</strong>
+                <span>Estádio sutil e monograma AOS</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </article>
+
+    </div><!-- /#windows-container -->
+
+    <!-- =============================================================== -->
+    <!-- 4. MENU DE CONTEXTO (BOTÃO DIREITO NA ÁREA DE TRABALHO)        -->
+    <!-- =============================================================== -->
+    <div id="context-menu" class="context-menu" style="display: none;" role="menu">
+      <button class="context-item" onclick="refreshDesktop()" role="menuitem">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        Atualizar Sistema
+      </button>
+      <button class="context-item" onclick="cycleWallpaper()" role="menuitem">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Trocar Papel de Parede
+      </button>
+      <div class="context-divider"></div>
+      <button class="context-item" onclick="openApp('projects')" role="menuitem">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Abrir Meus Projetos
+      </button>
+      <button class="context-item" onclick="openApp('about')" role="menuitem">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        Sobre o AdrielOS
+      </button>
+    </div>
+
+    <!-- =============================================================== -->
+    <!-- 5. MENU INICIAR                                                 -->
+    <!-- =============================================================== -->
+    <aside id="start-menu" class="start-menu" style="display: none;" role="menu" aria-label="Menu Iniciar">
+      
+      <!-- Cabeçalho do Perfil -->
+      <div class="start-profile-header">
+        <div class="start-avatar">
+          <div class="avatar-placeholder small">
+            <span>AM</span>
+          </div>
+        </div>
+        <div class="start-user-meta">
+          <h3 class="start-user-name">Adriel Morback</h3>
+          <span class="start-user-role">Estudante de Ensino Médio Técnico</span>
+        </div>
+      </div>
+
+      <!-- Barra de Pesquisa Funcional em Tempo Real -->
+      <div class="start-search-box">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" class="search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="start-search-input" placeholder="Pesquisar aplicativos e projetos..." autocomplete="off">
+        <button id="start-search-clear" class="btn-clear-search hidden" aria-label="Limpar pesquisa">&times;</button>
+      </div>
+
+      <!-- Lista de Aplicativos (Filtrada dinamicamente) -->
+      <div class="start-apps-list" id="start-apps-list">
+        
+        <button class="start-app-item" data-app="about" data-keywords="sobre adriel morback perfil biografia estudante futebol">
+          <img src="assets/icons/about.svg" alt="" class="start-app-icon">
+          <div class="start-app-text">
+            <strong>Sobre Adriel</strong>
+            <span>Apresentação pessoal e interesses</span>
+          </div>
+        </button>
+
+        <button class="start-app-item" data-app="projects" data-keywords="projetos jogo ste beiço street excel apostila trabalhos portfólio">
+          <img src="assets/icons/projects.svg" alt="" class="start-app-icon">
+          <div class="start-app-text">
+            <strong>Meus Projetos</strong>
+            <span>Jogo STE, Apostila de Excel e criações</span>
+          </div>
+        </button>
+
+        <button class="start-app-item" data-app="skills" data-keywords="habilidades skills programação html css javascript canvas excel">
+          <img src="assets/icons/skills.svg" alt="" class="start-app-icon">
+          <div class="start-app-text">
+            <strong>Minhas Habilidades</strong>
+            <span>Tecnologias, linguagens e ferramentas</span>
+          </div>
+        </button>
+
+        <button class="start-app-item" data-app="github" data-keywords="github git repositório código 43111-cyber jogo-ste">
+          <img src="assets/icons/github.svg" alt="" class="start-app-icon">
+          <div class="start-app-text">
+            <strong>Meu GitHub</strong>
+            <span>Explorador de repositórios e código fonte</span>
+          </div>
+        </button>
+
+        <button class="start-app-item" data-app="contact" data-keywords="contato email whatsapp mensagem adriel.morback@gmail.com redes">
+          <img src="assets/icons/contact.svg" alt="" class="start-app-icon">
+          <div class="start-app-text">
+            <strong>Contato</strong>
+            <span>E-mail, WhatsApp e formulário</span>
+          </div>
+        </button>
+
+        <button class="start-app-item" data-app="trash" data-keywords="lixeira arquivos deletados ideias construção">
+          <img src="assets/icons/trash.svg" alt="" class="start-app-icon">
+          <div class="start-app-text">
+            <strong>Lixeira</strong>
+            <span>Projetos em construção e ideias</span>
+          </div>
+        </button>
+
+        <button class="start-app-item" data-app="wallpaper" data-keywords="wallpaper papel de parede fundo temas personalizar aparência">
+          <img src="assets/icons/settings.svg" alt="" class="start-app-icon">
+          <div class="start-app-text">
+            <strong>Wallpapers</strong>
+            <span>Personalizar aparência do sistema</span>
+          </div>
+        </button>
+
+        <div id="start-no-results" class="start-no-results hidden">
+          <span>Nenhum aplicativo encontrado para esta busca.</span>
+        </div>
+
+      </div>
+
+      <!-- Rodapé do Menu Iniciar -->
+      <div class="start-footer">
+        <div class="start-footer-left">
+          <button class="start-footer-btn" id="btn-toggle-theme" title="Alternar Tema Claro / Escuro">
+            <span id="theme-btn-icon">🌙</span>
+            <span id="theme-btn-label">Modo Escuro</span>
+          </button>
+        </div>
+        <div class="start-footer-right">
+          <button class="start-footer-btn" onclick="restartSystem()" title="Reiniciar AdrielOS">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+            <span>Reiniciar</span>
+          </button>
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- =================================================================== -->
+  <!-- 6. BARRA DE TAREFAS (TASKBAR)                                       -->
+  <!-- =================================================================== -->
+  <footer id="taskbar" class="taskbar" role="navigation" aria-label="Barra de Tarefas do Sistema">
+    
+    <!-- Botão Iniciar -->
+    <button id="start-button" class="taskbar-start-btn" aria-label="Abrir Menu Iniciar" aria-expanded="false" title="Menu Iniciar">
+      <img src="assets/icons/start.svg" alt="" class="start-logo">
+      <span class="start-text">AdrielOS</span>
+    </button>
+
+    <!-- Aplicativos Pinned / Em Execução na Barra -->
+    <div id="taskbar-apps" class="taskbar-apps">
+      <!-- Injetado dinamicamente via script.js -->
+    </div>
+
+    <!-- Área de Status / Bandeja do Sistema (System Tray) -->
+    <div class="system-tray" id="system-tray">
+      
+      <!-- Alternador de Som do Sistema -->
+      <button class="tray-btn" id="btn-sound-toggle" title="Efeitos Sonoros (Ligado/Desligado)" aria-label="Efeitos Sonoros">
+        <span id="sound-icon">🔊</span>
+      </button>
+
+      <!-- Indicador de Status -->
+      <div class="tray-status-chip" title="Sistema Online e Operante">
+        <span class="status-dot"></span>
+        <span class="status-label">Online</span>
+      </div>
+
+      <!-- Relógio e Data Automáticos -->
+      <div class="tray-datetime" id="tray-datetime" title="Clique para detalhes de data e hora">
+        <span class="tray-time" id="taskbar-clock">00:00:00</span>
+        <span class="tray-date" id="taskbar-date">00/00/0000</span>
+      </div>
+
+    </div>
+
+  </footer>
+
+  <!-- =================================================================== -->
+  <!-- 7. CONTAINER DE NOTIFICAÇÕES (TOAST SYSTEM)                         -->
+  <!-- =================================================================== -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Script Principal do Sistema -->
+  <script src="script.js"></script>
+</body>
+</html>

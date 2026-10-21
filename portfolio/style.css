@@ -1,0 +1,1940 @@
+/* ==========================================================================
+   ADRIEL OS — DESIGN SYSTEM & ESTILOS PRINCIPAIS
+   Identidade: Tecnologia, Futuro, Futebol e Programação
+   Desenvolvido para Adriel Morback
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. VARIÁVEIS DO SISTEMA (DESIGN TOKENS)
+   -------------------------------------------------------------------------- */
+:root {
+  /* Paleta Base — Dark Slate & Deep Navy */
+  --bg-deep: #050913;
+  --bg-desktop: #070d19;
+  --bg-surface: rgba(15, 23, 42, 0.82);
+  --bg-surface-elevated: rgba(30, 41, 59, 0.9);
+  --bg-surface-glass: rgba(15, 23, 42, 0.65);
+  
+  /* Cores de Acento — Verde Neon Pitch & Ciano Cyber */
+  --accent-neon: #00ff88;
+  --accent-neon-hover: #10b981;
+  --accent-neon-glow: rgba(0, 255, 136, 0.35);
+  --accent-neon-subtle: rgba(0, 255, 136, 0.12);
+  --accent-cyan: #38bdf8;
+  --accent-cyan-glow: rgba(56, 189, 248, 0.3);
+  --accent-amber: #f59e0b;
+  --accent-danger: #ef4444;
+
+  /* Tipografia & Cores de Texto */
+  --text-main: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-dark: #0f172a;
+  
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+
+  /* Bordas & Sombras */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-neon: rgba(0, 255, 136, 0.4);
+  --shadow-window: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 255, 136, 0.08);
+  --shadow-floating: 0 15px 35px -8px rgba(0, 0, 0, 0.6);
+  --glass-blur: blur(18px);
+
+  /* Dimensões do SO */
+  --taskbar-height: 52px;
+  --border-radius-window: 14px;
+  --border-radius-card: 10px;
+  --transition-smooth: 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Tema Claro (Opcional, com identidade preservada) */
+body[data-theme="light"] {
+  --bg-deep: #0f172a;
+  --bg-desktop: #f1f5f9;
+  --bg-surface: rgba(255, 255, 255, 0.92);
+  --bg-surface-elevated: #ffffff;
+  --bg-surface-glass: rgba(255, 255, 255, 0.8);
+  --accent-neon: #059669;
+  --accent-neon-hover: #047857;
+  --accent-neon-glow: rgba(5, 150, 105, 0.25);
+  --accent-neon-subtle: rgba(5, 150, 105, 0.12);
+  --accent-cyan: #0284c7;
+  --text-main: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --border-subtle: rgba(0, 0, 0, 0.1);
+  --border-neon: rgba(5, 150, 105, 0.4);
+  --shadow-window: 0 20px 45px -10px rgba(0, 0, 0, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET & REGRAS BÁSICAS
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-main);
+  background-color: var(--bg-deep);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Scrollbar estilizada moderna */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-neon);
+}
+
+/* --------------------------------------------------------------------------
+   3. TELA DE INICIALIZAÇÃO (BOOTLOADER)
+   -------------------------------------------------------------------------- */
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background-color: #040811;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.45s ease, visibility 0.45s;
+}
+
+.boot-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.boot-content {
+  width: 90%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.boot-logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.boot-logo-img {
+  width: 68px;
+  height: 68px;
+  filter: drop-shadow(0 0 16px var(--accent-neon-glow));
+  animation: logoPulse 2.4s infinite ease-in-out;
+}
+
+@keyframes logoPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 16px var(--accent-neon-glow)); }
+  50% { transform: scale(1.05); filter: drop-shadow(0 0 28px var(--accent-neon)); }
+}
+
+.boot-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #ffffff;
+}
+
+.boot-title span {
+  color: var(--accent-neon);
+  text-shadow: 0 0 18px var(--accent-neon-glow);
+}
+
+.boot-tagline {
+  font-size: 0.98rem;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  font-style: italic;
+  max-width: 440px;
+}
+
+.boot-progress-container {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.boot-progress-bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #06b6d4, var(--accent-neon));
+  border-radius: 999px;
+  box-shadow: 0 0 12px var(--accent-neon);
+  transition: width 0.15s ease-out;
+}
+
+.boot-status-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+}
+
+.boot-percent {
+  color: var(--accent-neon);
+  font-weight: 700;
+}
+
+.boot-console {
+  width: 100%;
+  height: 70px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: #34d399;
+  text-align: left;
+  overflow-y: hidden;
+  margin-bottom: 22px;
+}
+
+.boot-log-line {
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.btn-skip-boot {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition-smooth);
+}
+
+.btn-skip-boot:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--accent-neon);
+  color: #ffffff;
+}
+
+.btn-skip-boot kbd {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   4. ÁREA DE TRABALHO (DESKTOP)
+   -------------------------------------------------------------------------- */
+.desktop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - var(--taskbar-height));
+  overflow: hidden;
+}
+
+.wallpaper-layer {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: background-image 0.4s ease-in-out;
+  z-index: 0;
+}
+
+.desktop-overlay-grid {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 60%, rgba(4, 7, 14, 0.6) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Grade de Ícones do Desktop */
+.desktop-icons {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 16px;
+  height: calc(100% - 48px);
+  z-index: 10;
+}
+
+.desktop-icon {
+  width: 90px;
+  min-height: 96px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  color: #ffffff;
+  transition: var(--transition-smooth);
+  outline: none;
+}
+
+.desktop-icon:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.desktop-icon.selected {
+  background: var(--accent-neon-subtle);
+  border-color: var(--accent-neon);
+  box-shadow: 0 0 15px var(--accent-neon-glow);
+}
+
+.icon-visual {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.desktop-icon:hover .icon-visual {
+  transform: scale(1.08);
+}
+
+.icon-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.icon-label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.6);
+  line-height: 1.2;
+  word-break: break-word;
+  max-width: 82px;
+}
+
+/* --------------------------------------------------------------------------
+   5. GERENCIADOR DE JANELAS (OS WINDOWS)
+   -------------------------------------------------------------------------- */
+.windows-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* Permite clicar no desktop quando nenhuma janela sob o ponteiro */
+  z-index: 50;
+}
+
+.os-window {
+  position: absolute;
+  pointer-events: auto; /* Janela é interativa */
+  background: var(--bg-surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-window);
+  box-shadow: var(--shadow-window);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  min-width: 320px;
+  min-height: 220px;
+}
+
+/* Efeito de Janela Ativa em Foco */
+.os-window.active {
+  border-color: rgba(0, 255, 136, 0.35);
+  box-shadow: 0 25px 65px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 255, 136, 0.12);
+}
+
+/* Estado Minimizado */
+.os-window.minimized {
+  opacity: 0 !important;
+  transform: scale(0.7) translateY(200px) !important;
+  pointer-events: none !important;
+}
+
+/* Estado Maximizado */
+.os-window.maximized {
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: calc(100vh - var(--taskbar-height)) !important;
+  border-radius: 0 !important;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+/* Barra de Título da Janela */
+.window-titlebar {
+  height: 40px;
+  background: rgba(10, 16, 30, 0.7);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  cursor: grab;
+  user-select: none;
+}
+
+.window-titlebar:active {
+  cursor: grabbing;
+}
+
+.os-window.maximized .window-titlebar {
+  cursor: default;
+}
+
+.window-title-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.window-title-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.window-title-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.window-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.win-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: var(--transition-smooth);
+}
+
+.win-btn svg {
+  width: 11px;
+  height: 11px;
+}
+
+.win-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.win-btn-close:hover {
+  background: var(--accent-danger);
+  color: #ffffff;
+}
+
+/* Corpo da Janela */
+.window-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   6. CONTEÚDO DOS APLICATIVOS (APPS INTERIOR)
+   -------------------------------------------------------------------------- */
+.section-heading {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 22px 0 14px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* APP: SOBRE ADRIEL */
+.about-hero {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 20px;
+}
+
+.about-avatar-container {
+  flex-shrink: 0;
+}
+
+.about-avatar-ring {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(135deg, var(--accent-neon), var(--accent-cyan));
+  box-shadow: 0 0 18px var(--accent-neon-glow);
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.avatar-initials {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -1px;
+}
+
+.avatar-badge {
+  position: absolute;
+  bottom: 0px;
+  right: -2px;
+  background: var(--accent-neon);
+  color: #050a12;
+  font-size: 0.75rem;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border: 2px solid #0f172a;
+}
+
+.user-chip {
+  display: inline-block;
+  background: rgba(0, 255, 136, 0.12);
+  color: var(--accent-neon);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+}
+
+.about-name {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+}
+
+.about-tagline-quote {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--text-muted);
+  margin: 4px 0 10px 0;
+}
+
+.about-stats-pill {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pill-divider {
+  opacity: 0.4;
+}
+
+.about-bio-box {
+  background: rgba(255, 255, 255, 0.04);
+  border-left: 3px solid var(--accent-neon);
+  padding: 14px 18px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 20px;
+}
+
+.about-bio-text {
+  font-size: 0.96rem;
+  line-height: 1.6;
+  color: var(--text-main);
+}
+
+.about-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.about-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-card);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: var(--transition-smooth);
+}
+
+.about-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
+}
+
+.card-icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--accent-card, #00ff88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-icon-wrap svg {
+  width: 22px;
+  height: 22px;
+}
+
+.card-custom-svg {
+  width: 24px;
+  height: 24px;
+}
+
+.card-info h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.card-info p {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.about-actions-footer {
+  display: flex;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* APP: MEUS PROJETOS */
+.projects-header-desc {
+  margin-bottom: 20px;
+  font-size: 0.94rem;
+  color: var(--text-muted);
+}
+
+.projects-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.project-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  transition: var(--transition-smooth);
+}
+
+.project-card:hover {
+  border-color: rgba(0, 255, 136, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.project-thumbnail-wrapper {
+  position: relative;
+  background: #090d16;
+  min-height: 190px;
+}
+
+.project-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.project-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+}
+
+.badge-arcade {
+  background: rgba(0, 255, 136, 0.85);
+  color: #040811;
+}
+
+.badge-edu {
+  background: rgba(56, 189, 248, 0.85);
+  color: #040811;
+}
+
+.badge-future {
+  background: rgba(245, 158, 11, 0.85);
+  color: #040811;
+}
+
+.project-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.project-meta-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.repo-owner-tag {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent-cyan);
+}
+
+.status-indicator {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--accent-neon);
+}
+
+.status-indicator.blink {
+  animation: blink 1.8s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.project-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.project-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.tag {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.project-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* APP: HABILIDADES */
+.skills-disclaimer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 255, 136, 0.08);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  color: var(--text-main);
+  margin-bottom: 22px;
+}
+
+.skills-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.skill-group-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.group-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.skill-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.skill-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 14px;
+  transition: var(--transition-smooth);
+}
+
+.skill-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.skill-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.skill-item-header strong {
+  font-size: 0.92rem;
+  color: #ffffff;
+}
+
+.skill-verified {
+  font-size: 0.7rem;
+  color: var(--accent-neon);
+  background: rgba(0, 255, 136, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.skill-item p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* APP: GITHUB EXPLORER */
+.github-profile-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.github-avatar-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.github-octo {
+  width: 32px;
+  height: 32px;
+}
+
+.github-profile-details {
+  flex: 1;
+}
+
+.github-username {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.github-bio {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.github-repo-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.repo-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.repo-link {
+  font-size: 1.1rem;
+  color: var(--accent-cyan);
+  text-decoration: none;
+}
+
+.repo-link:hover {
+  text-decoration: underline;
+}
+
+.repo-visibility {
+  font-size: 0.72rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 2px 8px;
+  color: var(--text-muted);
+}
+
+.repo-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.repo-languages-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.repo-lang-legend {
+  display: flex;
+  gap: 16px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+
+.lang-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.repo-clone-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 18px;
+}
+
+.clone-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.clone-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.clone-input-row input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #38bdf8;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  outline: none;
+}
+
+/* APP: CONTATO */
+.contact-channels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.channel-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition-smooth);
+}
+
+.channel-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.channel-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--chan-color, #00ff88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.channel-icon-wrap svg {
+  width: 22px;
+  height: 22px;
+}
+
+.channel-svg-img {
+  width: 24px;
+  height: 24px;
+}
+
+.channel-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.channel-val {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 10px;
+  word-break: break-all;
+}
+
+.btn-channel-action {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-neon);
+}
+
+.contact-form-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.form-disclaimer {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.os-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group textarea {
+  background: rgba(10, 16, 28, 0.6);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--accent-neon);
+  box-shadow: 0 0 10px var(--accent-neon-glow);
+}
+
+.form-feedback {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+
+.form-feedback.success {
+  background: rgba(0, 255, 136, 0.12);
+  border: 1px solid var(--accent-neon);
+  color: #34d399;
+}
+
+.form-feedback.error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid var(--accent-danger);
+  color: #f87171;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.form-notice {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+/* APP: LIXEIRA */
+.trash-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.trash-empty-state {
+  max-width: 420px;
+  padding: 20px;
+}
+
+.trash-huge-img {
+  width: 80px;
+  height: 80px;
+  opacity: 0.75;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.1));
+}
+
+.trash-headline {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.trash-quote {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--accent-neon);
+  margin-bottom: 10px;
+}
+
+.trash-sub {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+
+.trash-action-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* APP: WALLPAPERS */
+.wallpaper-hint {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.wallpaper-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.wallpaper-option {
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid var(--border-subtle);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.wallpaper-option:hover {
+  border-color: rgba(0, 255, 136, 0.5);
+  transform: translateY(-3px);
+}
+
+.wallpaper-option.selected {
+  border-color: var(--accent-neon);
+  box-shadow: 0 0 15px var(--accent-neon-glow);
+}
+
+.wp-preview-thumb {
+  height: 110px;
+  background-size: cover;
+  background-position: center;
+}
+
+.wp-thumb-1 { background-image: url('assets/wallpapers/adriel_tactical_pitch.jpg'); }
+.wp-thumb-2 { background-image: url('assets/wallpapers/cyber_matrix_pitch.svg'); }
+.wp-thumb-3 { background-image: url('assets/wallpapers/deep_space_aurora.svg'); }
+.wp-thumb-4 { background-image: url('assets/wallpapers/minimal_slate_field.svg'); }
+
+.wp-meta {
+  padding: 10px 12px;
+}
+
+.wp-meta strong {
+  display: block;
+  font-size: 0.88rem;
+  color: #ffffff;
+}
+
+.wp-meta span {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   7. BOTÕES COMUNS DO SISTEMA
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: var(--transition-smooth);
+}
+
+.btn-primary {
+  background: var(--accent-neon);
+  color: #050a12;
+  box-shadow: 0 4px 14px var(--accent-neon-glow);
+}
+
+.btn-primary:hover {
+  background: #15f78c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px var(--accent-neon-glow);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.btn-sm {
+  padding: 7px 13px;
+  font-size: 0.8rem;
+}
+
+.btn-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   8. MENU INICIAR & PESQUISA
+   -------------------------------------------------------------------------- */
+.start-menu {
+  position: absolute;
+  bottom: calc(var(--taskbar-height) + 12px);
+  left: 12px;
+  width: 380px;
+  max-height: 520px;
+  background: var(--bg-surface-elevated);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 255, 136, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9999;
+  animation: startMenuIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes startMenuIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.start-profile-header {
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.start-avatar .avatar-placeholder.small {
+  width: 44px;
+  height: 44px;
+  font-size: 0.95rem;
+  border: 2px solid var(--accent-neon);
+}
+
+.start-user-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.start-user-role {
+  font-size: 0.78rem;
+  color: var(--accent-neon);
+}
+
+.start-search-box {
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.search-icon {
+  color: var(--text-muted);
+}
+
+.start-search-box input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  outline: none;
+}
+
+.btn-clear-search {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.start-apps-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.start-app-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text-main);
+  transition: var(--transition-smooth);
+}
+
+.start-app-item:hover,
+.start-app-item:focus {
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+}
+
+.start-app-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.start-app-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.start-app-text strong {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.start-app-text span {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.start-no-results {
+  padding: 24px;
+  text-align: center;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+}
+
+.start-footer {
+  padding: 10px 16px;
+  background: rgba(0, 0, 0, 0.35);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.start-footer-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 6px 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.start-footer-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   9. MENU DE CONTEXTO (BOTÃO DIREITO)
+   -------------------------------------------------------------------------- */
+.context-menu {
+  position: absolute;
+  width: 210px;
+  background: var(--bg-surface-elevated);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+  padding: 6px;
+  z-index: 10000;
+  animation: contextIn 0.14s ease-out;
+}
+
+@keyframes contextIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.context-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  color: var(--text-main);
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.context-item:hover {
+  background: var(--accent-neon-subtle);
+  color: var(--accent-neon);
+}
+
+.context-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 4px 6px;
+}
+
+/* --------------------------------------------------------------------------
+   10. BARRA DE TAREFAS (TASKBAR)
+   -------------------------------------------------------------------------- */
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: var(--taskbar-height);
+  background: rgba(10, 16, 28, 0.85);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  z-index: 9998;
+}
+
+/* Botão Iniciar */
+.taskbar-start-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 6px 14px;
+  cursor: pointer;
+  color: #ffffff;
+  transition: var(--transition-smooth);
+}
+
+.taskbar-start-btn:hover,
+.taskbar-start-btn.active {
+  background: var(--accent-neon-subtle);
+  border-color: var(--accent-neon);
+  box-shadow: 0 0 15px var(--accent-neon-glow);
+}
+
+.start-logo {
+  width: 24px;
+  height: 24px;
+}
+
+.start-text {
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+/* Aplicativos na Barra de Tarefas */
+.taskbar-apps {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  padding: 0 16px;
+  overflow-x: auto;
+}
+
+.taskbar-app-tab {
+  height: 38px;
+  min-width: 42px;
+  max-width: 160px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  position: relative;
+  transition: var(--transition-smooth);
+  overflow: hidden;
+}
+
+.taskbar-app-tab:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.taskbar-app-tab.active {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.taskbar-app-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--accent-neon);
+  opacity: 0;
+  transition: var(--transition-smooth);
+}
+
+.taskbar-app-tab.open::after {
+  opacity: 0.6;
+}
+
+.taskbar-app-tab.active::after {
+  opacity: 1;
+  width: 24px;
+  box-shadow: 0 0 8px var(--accent-neon);
+}
+
+.taskbar-app-tab img {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.taskbar-tab-title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Bandeja do Sistema (Tray) */
+.system-tray {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tray-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: var(--transition-smooth);
+}
+
+.tray-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tray-status-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.25);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--accent-neon);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent-neon);
+  box-shadow: 0 0 6px var(--accent-neon);
+}
+
+.tray-datetime {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  line-height: 1.25;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.tray-datetime:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.tray-time {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   11. SISTEMA DE NOTIFICAÇÕES (TOAST SYSTEM)
+   -------------------------------------------------------------------------- */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100000;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  min-width: 280px;
+  max-width: 380px;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(0, 255, 136, 0.4);
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 255, 136, 0.15);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: #ffffff;
+  font-size: 0.88rem;
+  animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toast.toast-hiding {
+  animation: toastOut 0.25s ease-in forwards;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(40px); }
+}
+
+.toast-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.toast-msg {
+  flex: 1;
+  line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   12. RESPONSIVIDADE & DISPOSITIVOS MÓVEIS
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  /* Em telas pequenas, as janelas abrem adaptadas à tela */
+  .os-window {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    left: 2.5vw !important;
+    height: calc(100vh - var(--taskbar-height) - 16px) !important;
+    top: 8px !important;
+    border-radius: 12px !important;
+  }
+
+  .window-titlebar {
+    height: 46px;
+  }
+
+  .win-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Desktop icons grid ajustado para mobile */
+  .desktop-icons {
+    top: 16px;
+    left: 16px;
+    gap: 12px;
+  }
+
+  .desktop-icon {
+    width: 76px;
+    min-height: 84px;
+    padding: 6px 4px;
+  }
+
+  .icon-visual {
+    width: 44px;
+    height: 44px;
+  }
+
+  .icon-label {
+    font-size: 0.74rem;
+    max-width: 72px;
+  }
+
+  /* Ajustes dos Cards de Projetos */
+  .project-card {
+    grid-template-columns: 1fr;
+  }
+
+  .project-thumbnail-wrapper {
+    min-height: 160px;
+    max-height: 180px;
+  }
+
+  /* Ajustes do Perfil Sobre */
+  .about-hero {
+    flex-direction: column;
+    text-align: center;
+    gap: 14px;
+  }
+
+  .about-stats-pill {
+    justify-content: center;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* Menu Iniciar Mobile */
+  .start-menu {
+    width: calc(100vw - 20px);
+    left: 10px;
+    max-height: 80vh;
+  }
+
+  /* Barra de Tarefas Mobile */
+  .start-text {
+    display: none;
+  }
+
+  .taskbar-tab-title {
+    display: none;
+  }
+
+  .taskbar-app-tab {
+    min-width: 38px;
+    max-width: 38px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .tray-datetime .tray-date {
+    display: none;
+  }
+}
+
+/* Classes Auxiliares */
+.hidden {
+  display: none !important;
+}
